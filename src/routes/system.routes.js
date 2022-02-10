@@ -8,5 +8,6 @@ router.get('/system/dataset/:user/:program/:relation/data', systemController.get
 router.get('/system/info', systemController.getInfo )
 router.get('/system/os', systemController.getOS )
 router.get('/system/tables', systemController.getTables )
+router.get('/system/search', systemController.search )
  
 export default router;

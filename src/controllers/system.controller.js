@@ -35,3 +35,11 @@ export const getTables = async ( req, res , next ) => {
       res.send( stdout )
     } )
 }
+
+export const search = async ( req, res , next ) => {
+  
+  exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {
+      if( err ) return next(err);
+      res.send( stdout )
+    } )
+}

@@ -6,4 +6,7 @@ export default {
     fileName: process.env.FILE_NAME  || 'default.data', 
     fileExtension: process.env.FILE_EXTENSION  || '.json', 
     tempFileName: process.env.TEMP_FILE_NAME  || 'temp.data', 
+    port: process.env.PORT,
+    userName : process.env.USERNAME || 'local',
+    programName : process.env.PROGRAMNAME || 'osquery'
 }

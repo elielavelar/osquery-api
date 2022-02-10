@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import config from "./config/config";
 
 import SystemRoutes from './routes/system.routes'
 
@@ -12,7 +13,7 @@ var userName = 'local';
 var programName = 'osquery';
 
 const port = 8080;
-app.set('port', process.env.PORT || port);
+app.set('port', config.port || port);
 
 // Middlewares
 const corsOptions = {}
