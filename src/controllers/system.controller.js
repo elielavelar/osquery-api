@@ -1,10 +1,13 @@
 import { exec } from 'child_process'
 import { isValidTable, extractParam } from '../libraries/utils.library'
+import * as PersistenceFile from '../models/PersistenceFile'
 
 export const getInfo = async ( req, res , next ) => {
     const relation = 'system_info'
     exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
         if( err ) return next(err);
+        const stream = stdout
+        PersistenceFile.save( { stream } )
         res.send( stdout )
       } )
 }

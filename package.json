@@ -7,7 +7,7 @@
     "babel-node": "babel-node --presets=@babel/preset-env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
-    "dev": "nodemon --exec npm run babel-node src/server.js"
+    "dev": "nodemon --ignore ./attachments/* --exec npm run babel-node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -42,4 +42,5 @@
     "@babel/preset-env": "^7.16.11",
     "nodemon": "^2.0.15"
   }
+  
 }
