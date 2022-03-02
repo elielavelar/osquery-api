@@ -4,26 +4,45 @@ import * as OsQuery from './Osquery'
 
 export const init = () => {
     try {
-        setValue({path: Resource._path})
+        setValue({})
+        setData({
+            callfunction: OsQuery.getDataQuery,
+            type: 'os_version',
+            path: Resource.getPath('os_version'),
+            user: config.userName, 
+            program: config.programName,
+            relation: 'os_version' 
+        })
         setData({
             callfunction: OsQuery.getOS,
             type: 'os',
-            path: `${Resource._path}/os`
+            path: Resource.getPath('os')
             
         })
+        
         setData({
             callfunction: OsQuery.getInfo,
             type: 'info',
-            path: `${Resource._path}/info`
+            path: Resource.getPath('info')
             
         })
+        
         setData({
-            callfunction: OsQuery.getData,
-            type: 'data',
-            path: `${Resource._path}/data`,
-            user: config.user, 
-            program: config.programName 
-            
+            callfunction: OsQuery.getDataQuery,
+            type: 'interface_addresses',
+            path: Resource.getPath('interface_addresses'),
+            user: config.userName, 
+            program: config.programName,
+            relation: 'interface_addresses' 
+        })
+        
+        setData({
+            callfunction: OsQuery.getDataQuery,
+            type: 'usb_devicesb',
+            path: Resource.getPath('usb_devices'),
+            user: config.userName, 
+            program: config.programName,
+            relation: 'usb_devices' 
         })
         
     }  catch (error) {
@@ -32,17 +51,20 @@ export const init = () => {
 }
 
 const setValue = ({...params}) => {
-    Resource.save( params )
+    Resource.save( params ) 
 }
 
 const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
         let callback = async ( value ) => {
             let values = await JSON.parse(value);
-            Resource.save( { type, path, 
-                ... values[ Object.keys( values )[0]]
+            console.log('Osquery', values )
+            Resource.save( { type, path
+                , values
+                , ...params
             })
         }
+        let error = ( err ) => { throw err }
         callfunction({ callback, ...params })
     } catch (error) {
         throw error

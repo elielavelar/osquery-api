@@ -65,3 +65,20 @@ export const getData = ( params = {} ) => {
         throw error;
     }
 }
+
+export const getDataQuery = ( params = {} ) => {
+    
+    try {
+        const {callback = (x) => x , error = (err) => {throw err}}  = params
+
+        let {user, program, relation} = params
+
+        if(!isValidTable( relation ) ) return error(`Invalid table name: ${ relation }`)
+        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
+            if( err ) error(err);
+            callback( stdout )
+        } )
+    } catch (error) {
+        throw error;
+    }
+}
