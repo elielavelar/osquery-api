@@ -8,5 +8,6 @@ export default {
     tempFileName: process.env.TEMP_FILE_NAME  || 'temp.data', 
     port: process.env.PORT,
     userName : process.env.USERNAME || 'local',
-    programName : process.env.PROGRAMNAME || 'osquery'
+    programName : process.env.PROGRAMNAME || 'osquery',
+    dbName : process.env.DBNAME || 'db'
 }

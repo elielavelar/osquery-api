@@ -11,7 +11,7 @@ export const save = async ({stream = '', ...params}) => {
     let file = fileName+'.'+fileExtension;
     const filePath = defaultPath + file;
     if( fs.existsSync( filePath )){
-        console.log('content: ', await getContentFile( filePath ))
+        console.log('content: ', getContentFile( filePath ))
     } else {
         create({stream, process, params})
     }

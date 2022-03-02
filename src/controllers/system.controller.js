@@ -1,42 +1,21 @@
 import { exec } from 'child_process'
-import { isValidTable, extractParam } from '../libraries/utils.library'
-import * as PersistenceFile from '../models/PersistenceFile'
+import * as Resource from '../models/Resource'
+import * as Osquery from '../models/Osquery'
 
 export const getInfo = async ( req, res , next ) => {
-    const relation = 'system_info'
-    exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-        if( err ) return next(err);
-        const stream = stdout
-        PersistenceFile.save( { stream } )
-        res.send( stdout )
-      } )
+    Osquery.getInfo({callback: (params) => res.send(params), error: next})
 }
 
 export const getOS = async ( req, res , next ) => {
-    const relation = 'osquery_info'
-    exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-        if( err ) return next(err);
-        res.send( stdout )
-      } )
+    Osquery.getOS( { callback: ( params ) => res.send(params), error: next} )
 }
 
 export const getData = async (req, res, next) => {
-    var user = extractParam(req, 'user')
-    var program = extractParam(req, 'program')
-    var relation = extractParam(req, 'relation')
-
-    if(!isValidTable( relation ) ) return next(`Invalid table name: ${ relation }`)
-    exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-        if( err ) return next(err);
-        res.send( stdout )
-      } )
+    Osquery.getData({ callback: (params) => res.send(params), error: next, ...req.params})
 }
 
 export const getTables = async ( req, res , next ) => {
-  exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {
-      if( err ) return next(err);
-      res.send( stdout )
-    } )
+  Osquery.getTables({ callback: ( params ) => res.send(params), error: next})
 }
 
 export const search = async ( req, res , next ) => {

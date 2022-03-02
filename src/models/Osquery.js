@@ -1,10 +1,67 @@
+import config from '../config/config'
 import { exec } from 'child_process'
+import * as Resource from './Resource'
+import { isValidTable, extractParam } from '../libraries/utils.library'
 
-export const tables = new Promise( ( res, rej ) => {
-    exec( 'osqueryi .tables', ( err, stdout, stderr) => {
-        if( err ) return reject( err )
-        let out = stdout.trim().replace(/=>/g, '').split('\n').map( table => {
-            userName
+export const getTables = async ( params = {} ) => {
+    try {
+        const { callback = (x) => x , error = (err) => {throw err}}  = params
+
+        exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {
+            if( err ) error(err);
+            callback( stdout );
+        } )
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getInfo = async ( params = {} ) => {
+    try {
+        const {callback = (x) => x , error = (err) => {throw err}}  = params
+
+        const relation = 'system_info'
+        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
+            if( err ) return error(err);
+            callback( stdout )
+        } )
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getOS = async ( params = {} ) => {
+    try {
+        let defaultCallback = async (x)  => {
+            return await x;
+        };
+        let { callback = defaultCallback , error = (err) => {throw err}}  = params
+        const relation = 'osquery_info'
+        exec(`osqueryi --json "select * from ${relation}"`, async (err, stdout) => {
+            if (err) error(err)
+            await callback(stdout)
         })
-    })
-})
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getData = ( params = {} ) => {
+    
+    try {
+        const {callback = (x) => x , error = (err) => {throw err}}  = params
+
+        var user = extractParam(params, 'user')
+        var program = extractParam(params, 'program')
+        var relation = extractParam(params, 'relation')
+
+        if(!isValidTable( relation ) ) return next(`Invalid table name: ${ relation }`)
+        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
+            if( err ) error(err);
+            callback( stdout )
+        } )
+    } catch (error) {
+        throw error;
+    }
+}
