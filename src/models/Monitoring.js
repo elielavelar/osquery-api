@@ -38,11 +38,20 @@ export const init = () => {
         /*
         setData({
             callfunction: OsQuery.getDataQuery,
-            type: 'pci_devices',
-            path: Resource.getPath('pci_devices'),
+            type: 'registry',
+            path: Resource.getPath('registry'),
             user: config.userName, 
             program: config.programName,
-            relation: 'pci_devices' 
+            relation: 'registry' 
+        })
+        /*
+        setData({
+            callfunction: OsQuery.getDataQuery,
+            type: 'sub_devices',
+            path: Resource.getPath('sub_devices'),
+            user: config.userName, 
+            program: config.programName,
+            relation: 'sub_devices' 
         })
         */
     }  catch (error) {
