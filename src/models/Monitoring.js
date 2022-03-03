@@ -28,23 +28,23 @@ export const init = () => {
         })
         
         setData({
-            callfunction: OsQuery.getDataQuery,
+            callfunction: OsQuery.getDataQuery, 
             type: 'interface_addresses',
             path: Resource.getPath('interface_addresses'),
             user: config.userName, 
             program: config.programName,
             relation: 'interface_addresses' 
         })
-        
+        /*
         setData({
             callfunction: OsQuery.getDataQuery,
-            type: 'usb_devicesb',
-            path: Resource.getPath('usb_devices'),
+            type: 'pci_devices',
+            path: Resource.getPath('pci_devices'),
             user: config.userName, 
             program: config.programName,
-            relation: 'usb_devices' 
+            relation: 'pci_devices' 
         })
-        
+        */
     }  catch (error) {
         throw error
     }
@@ -58,7 +58,6 @@ const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
         let callback = async ( value ) => {
             let values = await JSON.parse(value);
-            console.log('Osquery', values )
             Resource.save( { type, path
                 , values
                 , ...params

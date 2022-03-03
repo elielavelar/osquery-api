@@ -11,7 +11,7 @@ export const getOS = async ( req, res , next ) => {
 }
 
 export const getData = async (req, res, next) => {
-    Osquery.getData({ callback: (params) => res.send(params), error: next, ...req.params})
+    Osquery.getDataQuery({ callback: (params) => res.send(params), error: next, ...req.params})
 }
 
 export const getTables = async ( req, res , next ) => {

@@ -71,9 +71,12 @@ export const getDataQuery = ( params = {} ) => {
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
 
-        let {user, program, relation} = params
+        let {user, program, relation, criteria = {} } = params
 
         if(!isValidTable( relation ) ) return error(`Invalid table name: ${ relation }`)
+        Object.entries(criteria).forEach( (key, value) => {
+            console.log(key, value)
+        })
         exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
             if( err ) error(err);
             callback( stdout )

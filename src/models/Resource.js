@@ -13,9 +13,8 @@ export const save = ({ type = keyword, path = _path, ...values }) => {
     let _parentPath = getParent(path)
     const model = get(path)
     if(typeof model !== 'undefined'){
-        console.log(type)
+
     } else {
-        console.log('Res',path)
         insert({ path, ...values })
     }
     
