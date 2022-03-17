@@ -26,6 +26,10 @@ export const getDevices = async ( req, res, next) => {
   Osquery.getDevices({ callback: (params) => res.send(params), error: next})
 }
 
+export const getApplications = async ( req, res, next) => {
+  Osquery.getApplications({ callback: (params) => res.send(params), error: next})
+}
+
 export const search = async ( req, res , next ) => {
   
   exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {

@@ -1,11 +1,33 @@
 import config from '../config/config'
-import { exec } from 'child_process'
+import { exec, spawn } from 'child_process'
 import { isValidTable, extractParam } from '../libraries/utils.library'
 import * as Resource from './Resource'
 import * as WindowsOsquery from './submodels/WindowsOsquery'
 import util from 'util'
 
 const execProm = util.promisify( exec )
+
+const execPower = ( command ) => {
+    return new Promise( (resolve, reject) => {
+        const child = spawn( 'powershell.exe', [ command ] );
+        child.stdout.on('data', (data) => {
+           resolve(data.toString().trim())
+        })
+        child.stderr.on('data', ( data ) => {
+           reject( data )
+        })
+    })
+}
+
+export const runPower =  async ( params = {}) => {
+    const { command = '', callback = (x) =>  JSON.parse( x )  , error = (err) => {throw err}}  = params
+    try {
+        return await execPower( command )
+    } catch ( e ) {
+        console.error( e )
+        error( e )
+    }
+}
 
 export const run = async ( params = {}) => {
     const { command = '', callback = (x) =>  JSON.parse( x )  , error = (err) => {throw err}}  = params
@@ -125,16 +147,29 @@ export const getDataQuery = ( params = {} ) => {
 export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const { values }  = Resource.get( Resource.getPath('os'))
+        const { values = {}}  = Resource.get( Resource.getPath('os'))
         const {build_platform, ...os } = values
-        console.log(  build_platform )
         
         if( build_platform == config.windowsOS ){
-            WindowsOsquery.getDevices()
+            let result = await WindowsOsquery.getDevices()
+            console.log( result )
+            callback( {} )
         } else {
             console.log("It's a penguin!!!!!")
         }
         
+    } catch ( e) {
+        error( e )
+    }
+}
+
+export const getApplications = async ( params = {}) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'programs'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
     } catch ( e) {
         error( e )
     }

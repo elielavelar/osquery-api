@@ -11,5 +11,6 @@ router.get('/system/osversion', systemController.getOSVersion )
 router.get('/system/devices', systemController.getDevices )
 router.get('/system/tables', systemController.getTables )
 router.get('/system/search', systemController.search )
+router.get('/system/applications', systemController.getApplications )
  
 export default router;

@@ -14,7 +14,7 @@ export const save = ({ type = keyword, path = _path, ...values }) => {
     let _parentPath = getParent(path)
     const model = get(path)
     if(typeof model !== 'undefined' && overewrite ){
-        update({ path, ...values} )
+        //update({ path, ...values} )
     } else {
         insert({ path, ...values })
     }
