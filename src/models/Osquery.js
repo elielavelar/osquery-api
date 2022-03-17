@@ -56,6 +56,16 @@ export const getOS = async ( params = {} ) => {
 }
 
 export const getOSVersion = async ( params = {} ) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'os_version'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
+    } catch ( e) {
+        error( e )
+    }
+    /*
     try {
         let defaultCallback = async (x)  => {
             return await x;
@@ -66,10 +76,11 @@ export const getOSVersion = async ( params = {} ) => {
             if (err) error(err)
             await callback(stdout)
         })
-
+    
     } catch (error) {
         throw error;
     }
+    */
 }
 
 export const getData = ( params = {} ) => {
@@ -115,11 +126,15 @@ export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         const { values }  = Resource.get( Resource.getPath('os'))
-        const { ...os } = values[0]
-        if( os.build_platform == config.windowsOS ){
+        const {build_platform, ...os } = values
+        console.log(  build_platform )
+        
+        if( build_platform == config.windowsOS ){
             WindowsOsquery.getDevices()
         } else {
+            console.log("It's a penguin!!!!!")
         }
+        
     } catch ( e) {
         error( e )
     }

@@ -13,14 +13,14 @@ export const init = () => {
             program: config.programName,
             relation: 'os_version' 
         })
-        
+        */
         setData({
             callfunction: OsQuery.getOSVersion,
             type: 'os_version',
             path: Resource.getPath('os_version')
             
         })
-        */
+        
         setData({
             callfunction: OsQuery.getOS,
             type: 'os',
@@ -81,7 +81,7 @@ const setValue = ({...params}) => {
 const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
         let callback = async ( value ) => {
-            let values = await value // JSON.parse(value);
+            let values = await  value[0];
             Resource.save( { type, path
                 , values
                 , ...params
