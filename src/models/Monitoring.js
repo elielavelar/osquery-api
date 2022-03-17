@@ -5,7 +5,7 @@ import * as OsQuery from './Osquery'
 export const init = () => {
     try {
         setValue({})
-        setData({
+        /*setData({
             callfunction: OsQuery.getDataQuery,
             type: 'os_version',
             path: Resource.getPath('os_version'),
@@ -13,13 +13,21 @@ export const init = () => {
             program: config.programName,
             relation: 'os_version' 
         })
+        
+        setData({
+            callfunction: OsQuery.getOSVersion,
+            type: 'os_version',
+            path: Resource.getPath('os_version')
+            
+        })
+        */
         setData({
             callfunction: OsQuery.getOS,
             type: 'os',
             path: Resource.getPath('os')
             
         })
-        
+        /*
         setData({
             callfunction: OsQuery.getInfo,
             type: 'info',
@@ -34,6 +42,13 @@ export const init = () => {
             user: config.userName, 
             program: config.programName,
             relation: 'interface_addresses' 
+        })
+
+        setData({
+            callfunction: OsQuery.getDevices,
+            type: 'devices',
+            path: Resource.getPath('devices')
+            
         })
         /*
         setData({
@@ -66,7 +81,7 @@ const setValue = ({...params}) => {
 const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
         let callback = async ( value ) => {
-            let values = await JSON.parse(value);
+            let values = await value // JSON.parse(value);
             Resource.save( { type, path
                 , values
                 , ...params

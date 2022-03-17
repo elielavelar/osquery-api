@@ -10,10 +10,11 @@ export const getPath = ( node = '') => {
 }
 
 export const save = ({ type = keyword, path = _path, ...values }) => {
+    const { overewrite = false } = values
     let _parentPath = getParent(path)
     const model = get(path)
-    if(typeof model !== 'undefined'){
-
+    if(typeof model !== 'undefined' && overewrite ){
+        update({ path, ...values} )
     } else {
         insert({ path, ...values })
     }
@@ -22,7 +23,6 @@ export const save = ({ type = keyword, path = _path, ...values }) => {
 
 const insert = ({path, uuid, ...values}) => {
     uuid ||= uuidv4()
-    
     db.push(path, {uuid, ...values})
 }
 
@@ -33,7 +33,7 @@ const getParent = (path = _path) => {
      return parentPath.join('/')
 }
 
-const get = ( path ) => {
+export const get = ( path ) => {
     try {
         return db.getData( path ) 
     } catch (error) {

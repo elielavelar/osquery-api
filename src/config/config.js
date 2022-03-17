@@ -9,5 +9,8 @@ export default {
     port: process.env.PORT,
     userName : process.env.USERNAME || 'local',
     programName : process.env.PROGRAMNAME || 'osquery',
-    dbName : process.env.DBNAME || 'db'
+    dbName : process.env.DBNAME || 'db',
+    windowsOS : 'windows',
+    linuxOS: 'linux',
+    macOS: 'darwin'
 }
