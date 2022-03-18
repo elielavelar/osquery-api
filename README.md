@@ -1,2 +1,2 @@
 # osquery-api
-A REST API building with NodeJS to get OsQuery Info
+A REST API building with NodeJS to get OsQuery Info + Windows WMI Technology
