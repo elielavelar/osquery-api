@@ -2,8 +2,9 @@ import * as Resource from './Resource'
 import config from '../config/config'
 import * as OsQuery from './Osquery'
 
-export const init = () => {
+export const init = async () => {
     try {
+        console.log('Starting DB Component...')
         setValue({})
         /*setData({
             callfunction: OsQuery.getDataQuery,
@@ -14,28 +15,27 @@ export const init = () => {
             relation: 'os_version' 
         })
         */
-        setData({
+        await setData({
             callfunction: OsQuery.getOSVersion,
             type: 'os_version',
             path: Resource.getPath('os_version')
             
         })
         
-        setData({
+        await setData({
             callfunction: OsQuery.getOS,
             type: 'os',
             path: Resource.getPath('os')
             
         })
-        /*
-        setData({
+        
+        await setData({
             callfunction: OsQuery.getInfo,
             type: 'info',
             path: Resource.getPath('info')
-            
         })
         
-        setData({
+        await setData({
             callfunction: OsQuery.getDataQuery, 
             type: 'interface_addresses',
             path: Resource.getPath('interface_addresses'),
@@ -44,7 +44,7 @@ export const init = () => {
             relation: 'interface_addresses' 
         })
 
-        setData({
+        await setData({
             callfunction: OsQuery.getDevices,
             type: 'devices',
             path: Resource.getPath('devices')
@@ -74,21 +74,22 @@ export const init = () => {
     }
 }
 
-const setValue = ({...params}) => {
-    Resource.save( params ) 
+const setValue = async ({...params}) => {
+    await Resource.save( params )
 }
 
 const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
-        let callback = async ( value ) => {
-            let values = await  value[0];
+        let callback = async ( result ) => {
+            let values = await  result;
+
             Resource.save( { type, path
                 , values
                 , ...params
             })
         }
         let error = ( err ) => { throw err }
-        callfunction({ callback, ...params })
+        await callfunction({ callback, ...params })
     } catch (error) {
         throw error
     }

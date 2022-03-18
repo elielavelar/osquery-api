@@ -9,19 +9,19 @@ export const getPath = ( node = '') => {
     return _path+'/'+node
 }
 
-export const save = ({ type = keyword, path = _path, ...values }) => {
+export const save = async ({ type = keyword, path = _path, ...values }) => {
     const { overewrite = false } = values
     let _parentPath = getParent(path)
     const model = get(path)
-    if(typeof model !== 'undefined' && overewrite ){
-        //update({ path, ...values} )
+    if(typeof model !== 'undefined' ){
+        overewrite ? update({ path, ...values} ) : null
     } else {
-        insert({ path, ...values })
+        await insert({ path, ...values })
     }
     
 }
 
-const insert = ({path, uuid, ...values}) => {
+const insert = async ({path, uuid, ...values}) => {
     uuid ||= uuidv4()
     db.push(path, {uuid, ...values})
 }

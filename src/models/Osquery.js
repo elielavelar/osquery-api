@@ -60,7 +60,8 @@ export const getInfo = async ( params = {} ) => {
 
         const relation = 'system_info'
         const command = `osqueryi --json "select * from ${ relation }"`
-        run({ command, callback, error } )
+        const result = await run({ command , error })
+        callback( result )
     } catch (error) {
         throw error;
     }
@@ -90,7 +91,7 @@ export const getOSVersion = async ( params = {} ) => {
     }
 }
 
-export const getData = ( params = {} ) => {
+export const getData = async ( params = {} ) => {
     
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
@@ -100,16 +101,15 @@ export const getData = ( params = {} ) => {
         var relation = extractParam(params, 'relation')
 
         if(!isValidTable( relation ) ) return next(`Invalid table name: ${ relation }`)
-        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout )
-        } )
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
     } catch (error) {
         throw error;
     }
 }
 
-export const getDataQuery = ( params = {} ) => {
+export const getDataQuery = async( params = {} ) => {
     
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
@@ -117,13 +117,9 @@ export const getDataQuery = ( params = {} ) => {
         let {user, program, relation, criteria = {} } = params
 
         if(!isValidTable( relation ) ) return error(`Invalid table name: ${ relation }`)
-        Object.entries(criteria).forEach( (key, value) => {
-            console.log(key, value)
-        })
-        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout )
-        } )
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
     } catch (error) {
         throw error;
     }
@@ -154,6 +150,7 @@ export const getApplications = async ( params = {}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         const os = await detectOS()
+        
         let result = {}
         switch (os.build_platform) {
             case config.windowsOS:
@@ -169,9 +166,8 @@ export const getApplications = async ( params = {}) => {
 
 const detectOS = async ( ) => {
     try {
-        const result = await Resource.get( Resource.getPath('os'))
-        const { values = {}} = result
-        return values
+        const { values = {}} = await Resource.get( Resource.getPath('os'))
+        return values[0]
     } catch (error) {
         throw error
     }
