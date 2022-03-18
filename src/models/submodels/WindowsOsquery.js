@@ -1,4 +1,5 @@
 import { run , runPower} from '../Osquery'
+import * as WindowsWMI from './WindowsWMI'
 
 export const findRegistry = async ({ select = '*',  key , params = {}}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
@@ -47,11 +48,13 @@ export const getDevicesReg = async () => {
     }
 }
 
-export const getDevices = async() => {
+export const getDevices = async( params = {}) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const values = await getUSBDevices()
-        return values
-    } catch (error) {
-        throw error;
+        //const values = await getUSBDevices()
+        WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback, where: `Description like 'USB%'`})
+        
+    } catch ( e ) {
+        error( e )
     }
 }
