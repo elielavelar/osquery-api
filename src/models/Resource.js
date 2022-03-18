@@ -18,7 +18,6 @@ export const save = async ({ type = keyword, path = _path, ...values }) => {
     } else {
         await insert({ path, ...values })
     }
-    
 }
 
 const insert = async ({path, uuid, ...values}) => {

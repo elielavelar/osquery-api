@@ -1,4 +1,5 @@
 import { exec } from 'child_process'
+import * as utils from '../libraries/utils.library'
 
 import * as Osquery from '../models/Osquery'
 
@@ -15,7 +16,10 @@ export const getOSVersion = async ( req, res , next ) => {
 }
 
 export const getData = async (req, res, next) => {
-    Osquery.getDataQuery({ callback: (params) => res.send(params), error: next, ...req.params})
+    const user = utils.extractParam( req, 'user' )
+    const program = utils.extractParam( req, 'program' )
+    const relation = utils.extractParam( req, 'relation' )
+    Osquery.getDataQuery({ callback: (params) => res.send(params), error: next, user, program, relation})
 }
 
 export const getTables = async ( req, res , next ) => {

@@ -5,7 +5,7 @@ import * as OsQuery from './Osquery'
 export const init = async () => {
     try {
         console.log('Starting DB Component...')
-        setValue({})
+        setValue({ token: config.token})
         /*setData({
             callfunction: OsQuery.getDataQuery,
             type: 'os_version',
