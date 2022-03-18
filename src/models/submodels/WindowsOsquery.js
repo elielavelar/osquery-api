@@ -58,3 +58,15 @@ export const getDevices = async( params = {}) => {
         error( e )
     }
 }
+
+export const getApplications = async ( params = {})  => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'programs'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
+    } catch (error) {
+        error( e )
+    }
+}
