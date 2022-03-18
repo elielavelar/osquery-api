@@ -3,6 +3,7 @@ import { exec, spawn } from 'child_process'
 import { isValidTable, extractParam } from '../libraries/utils.library'
 import * as Resource from './Resource'
 import * as WindowsOsquery from './submodels/WindowsOsquery'
+import * as LinuxOsquery from './submodels/LinuxOsquery'
 import util from 'util'
 
 const execProm = util.promisify( exec )
@@ -157,7 +158,6 @@ export const getApplications = async ( params = {}) => {
             case config.windowsOS:
                 result = WindowsOsquery.getApplications({ callback, error })
                 break;
-        
             default:
                 break;
         }
