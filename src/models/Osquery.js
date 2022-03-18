@@ -151,9 +151,8 @@ export const getDevices = async ( params = {}) => {
         const {build_platform, ...os } = values
         
         if( build_platform == config.windowsOS ){
-            let result = await WindowsOsquery.getDevices()
-            console.log( result )
-            callback( {} )
+            let result = await WindowsOsquery.getDevices({ callback })
+            
         } else {
             console.log("It's a penguin!!!!!")
         }
