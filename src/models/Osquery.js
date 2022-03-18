@@ -42,28 +42,29 @@ export const run = async ( params = {}) => {
 }
 
 export const getTables = async ( params = {} ) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const { callback = (x) => x , error = (err) => {throw err}}  = params
+        const command = `osqueryi --json .tables`
+        exec( command, ( err, stdout, stderr) => {
+            if( err ) error( err )
+            callback( stdout )
+        })
 
-        exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout );
-        } )
-    } catch (error) {
-        throw error;
+    } catch (e) {
+         error( e )
     }
 }
 
 export const getInfo = async ( params = {} ) => {
+    const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const {callback = (x) => x , error = (err) => {throw err}}  = params
 
         const relation = 'system_info'
         const command = `osqueryi --json "select * from ${ relation }"`
         const result = await run({ command , error })
         callback( result )
-    } catch (error) {
-        throw error;
+    } catch ( e ) {
+        error( e );
     }
 }
 

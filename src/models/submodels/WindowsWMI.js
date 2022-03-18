@@ -1,8 +1,8 @@
-import nodeWmi from "node-wmi";
+import wmi from "node-wmi";
 export const getInfo = async (params = {}) => {
     const { className, callback = (x) => x, where = '' } = params
     try {
-        nodeWmi.Query()
+        wmi.Query()
         .class( className )
         .where(where)
         .exec( ( err , data) => {
