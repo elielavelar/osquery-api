@@ -132,7 +132,7 @@ export const getDataQuery = ( params = {} ) => {
 export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const os = detectOS();
+        const os = await detectOS();
         console.log( os )
         if( os.build_platform == config.windowsOS ){
             let result = await WindowsOsquery.getDevices({ callback })
@@ -152,11 +152,11 @@ export const getDevices = async ( params = {}) => {
 export const getApplications = async ( params = {}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const os = detectOS()
+        const os = await detectOS()
         let result = {}
         switch (os.build_platform) {
             case config.windowsOS:
-                result = WindowsOsquery.getApplications({ callback, error })
+                result = await WindowsOsquery.getApplications({ callback, error })
                 break;
             default:
                 break;
@@ -168,7 +168,8 @@ export const getApplications = async ( params = {}) => {
 
 const detectOS = async ( ) => {
     try {
-        const { values = {}}  = Resource.get( Resource.getPath('os'))
+        const result = await Resource.get( Resource.getPath('os'))
+        const { values = {}} = result
         return values
     } catch (error) {
         throw error

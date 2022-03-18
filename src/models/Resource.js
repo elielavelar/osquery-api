@@ -33,9 +33,10 @@ const getParent = (path = _path) => {
      return parentPath.join('/')
 }
 
-export const get = ( path ) => {
+export const get = async ( path ) => {
     try {
-        return db.getData( path ) 
+        const data = await db.getData( path ) 
+        return data
     } catch (error) {
         return undefined
     }
