@@ -133,17 +133,18 @@ export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         const os = await detectOS();
-        console.log( os )
-        if( os.build_platform == config.windowsOS ){
-            let result = await WindowsOsquery.getDevices({ callback })
-            
-        } else {
-            let relation = 'usb_devices'
-            let command = `osqueryi --json "select * from ${relation}"`;
-            const result = await run({ command , error })
-            callback( result )
+        let result = {};
+        switch ( os.build_platform ) {
+            case config.windowsOS:
+                result = await WindowsOsquery.getDevices({ callback });
+                break;
+            case config.linuxOS:
+                result = await LinuxOsquery.getDevices({ callback });
+                break;
+            default:
+                break;
         }
-        
+        return result;
     } catch ( e) {
         error( e )
     }
