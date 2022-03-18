@@ -87,22 +87,6 @@ export const getOSVersion = async ( params = {} ) => {
     } catch ( e) {
         error( e )
     }
-    /*
-    try {
-        let defaultCallback = async (x)  => {
-            return await x;
-        };
-        let { callback = defaultCallback , error = (err) => {throw err}}  = params
-        const relation = 'os_version'
-        exec(`osqueryi --json "select * from ${relation}"`, async (err, stdout) => {
-            if (err) error(err)
-            await callback(stdout)
-        })
-    
-    } catch (error) {
-        throw error;
-    }
-    */
 }
 
 export const getData = ( params = {} ) => {
@@ -147,14 +131,16 @@ export const getDataQuery = ( params = {} ) => {
 export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const { values = {}}  = Resource.get( Resource.getPath('os'))
-        const {build_platform, ...os } = values
-        
-        if( build_platform == config.windowsOS ){
+        const os = detectOS();
+        console.log( os )
+        if( os.build_platform == config.windowsOS ){
             let result = await WindowsOsquery.getDevices({ callback })
             
         } else {
-            console.log("It's a penguin!!!!!")
+            let relation = 'usb_devices'
+            let command = `osqueryi --json "select * from ${relation}"`;
+            const result = await run({ command , error })
+            callback( result )
         }
         
     } catch ( e) {
@@ -165,11 +151,26 @@ export const getDevices = async ( params = {}) => {
 export const getApplications = async ( params = {}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        let relation = 'programs'
-        let command = `osqueryi --json "select * from ${relation}"`;
-        const result = await run({ command , error })
-        callback( result )
+        const os = detectOS()
+        let result = {}
+        switch (os.build_platform) {
+            case config.windowsOS:
+                result = WindowsOsquery.getApplications({ callback, error })
+                break;
+        
+            default:
+                break;
+        }
     } catch ( e) {
         error( e )
+    }
+}
+
+const detectOS = async ( ) => {
+    try {
+        const { values = {}}  = Resource.get( Resource.getPath('os'))
+        return values
+    } catch (error) {
+        throw error
     }
 }
