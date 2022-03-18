@@ -12,5 +12,7 @@ export default {
     dbName : process.env.DBNAME || 'db',
     windowsOS : 'windows',
     linuxOS: 'linux',
-    macOS: 'darwin'
+    macOS: 'darwin',
+    centralServerURL: process.env.SERVER_URL || 'http://localhost:3000',
+    token: process.env.TOKEN
 }

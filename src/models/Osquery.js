@@ -42,27 +42,29 @@ export const run = async ( params = {}) => {
 }
 
 export const getTables = async ( params = {} ) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const { callback = (x) => x , error = (err) => {throw err}}  = params
+        const command = `osqueryi --json .tables`
+        exec( command, ( err, stdout, stderr) => {
+            if( err ) error( err )
+            callback( stdout )
+        })
 
-        exec( `osqueryi --json .tables`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout );
-        } )
-    } catch (error) {
-        throw error;
+    } catch (e) {
+         error( e )
     }
 }
 
 export const getInfo = async ( params = {} ) => {
+    const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const {callback = (x) => x , error = (err) => {throw err}}  = params
 
         const relation = 'system_info'
         const command = `osqueryi --json "select * from ${ relation }"`
-        run({ command, callback, error } )
-    } catch (error) {
-        throw error;
+        const result = await run({ command , error })
+        callback( result )
+    } catch ( e ) {
+        error( e );
     }
 }
 
@@ -90,7 +92,7 @@ export const getOSVersion = async ( params = {} ) => {
     }
 }
 
-export const getData = ( params = {} ) => {
+export const getData = async ( params = {} ) => {
     
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
@@ -100,30 +102,25 @@ export const getData = ( params = {} ) => {
         var relation = extractParam(params, 'relation')
 
         if(!isValidTable( relation ) ) return next(`Invalid table name: ${ relation }`)
-        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout )
-        } )
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
     } catch (error) {
         throw error;
     }
 }
 
-export const getDataQuery = ( params = {} ) => {
+export const getDataQuery = async( params = {} ) => {
     
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
 
-        let {user, program, relation, criteria = {} } = params
+        let {user, program, relation, criteria = {}, ip } = params
 
         if(!isValidTable( relation ) ) return error(`Invalid table name: ${ relation }`)
-        Object.entries(criteria).forEach( (key, value) => {
-            console.log(key, value)
-        })
-        exec( `osqueryi --json "select * from ${ relation }"`, ( err, stdout, stderr ) => {
-            if( err ) error(err);
-            callback( stdout )
-        } )
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
     } catch (error) {
         throw error;
     }
@@ -132,18 +129,19 @@ export const getDataQuery = ( params = {} ) => {
 export const getDevices = async ( params = {}) => {
     const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const os = detectOS();
-        console.log( os )
-        if( os.build_platform == config.windowsOS ){
-            let result = await WindowsOsquery.getDevices({ callback })
-            
-        } else {
-            let relation = 'usb_devices'
-            let command = `osqueryi --json "select * from ${relation}"`;
-            const result = await run({ command , error })
-            callback( result )
+        const os = await detectOS();
+        let result = {};
+        switch ( os.build_platform ) {
+            case config.windowsOS:
+                result = await WindowsOsquery.getDevices({ callback });
+                break;
+            case config.linuxOS:
+                result = await LinuxOsquery.getDevices({ callback });
+                break;
+            default:
+                break;
         }
-        
+        return result;
     } catch ( e) {
         error( e )
     }
@@ -152,11 +150,12 @@ export const getDevices = async ( params = {}) => {
 export const getApplications = async ( params = {}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const os = detectOS()
+        const os = await detectOS()
+        
         let result = {}
         switch (os.build_platform) {
             case config.windowsOS:
-                result = WindowsOsquery.getApplications({ callback, error })
+                result = await WindowsOsquery.getApplications({ callback, error })
                 break;
             default:
                 break;
@@ -168,8 +167,8 @@ export const getApplications = async ( params = {}) => {
 
 const detectOS = async ( ) => {
     try {
-        const { values = {}}  = Resource.get( Resource.getPath('os'))
-        return values
+        const { values = {}} = await Resource.get( Resource.getPath('os'))
+        return values[0]
     } catch (error) {
         throw error
     }
