@@ -75,14 +75,14 @@ export const init = async () => {
 }
 
 const setValue = async ({...params}) => {
-    await Resource.save( params )
+    Resource.save( params )
 }
 
 const setData = async ({callfunction, callback, type, path, ...params}) => {
     try {
         let callback = async ( result ) => {
-            let values = await  result;
-
+            let values = await  result
+            
             Resource.save( { type, path
                 , values
                 , ...params

@@ -14,7 +14,7 @@ export const save = async ({ type = keyword, path = _path, ...values }) => {
     let _parentPath = getParent(path)
     const model = get(path)
     if(typeof model !== 'undefined' ){
-        overewrite ? update({ path, ...values} ) : null
+        overewrite ? update({ path, ...values} ) : null;
     } else {
         await insert({ path, ...values })
     }
@@ -33,9 +33,9 @@ const getParent = (path = _path) => {
      return parentPath.join('/')
 }
 
-export const get = async ( path ) => {
+export const get = ( path ) => {
     try {
-        const data = await db.getData( path ) 
+        const data = db.getData( path ) 
         return data
     } catch (error) {
         return undefined
