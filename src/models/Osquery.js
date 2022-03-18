@@ -115,7 +115,7 @@ export const getDataQuery = async( params = {} ) => {
     try {
         const {callback = (x) => x , error = (err) => {throw err}}  = params
 
-        let {user, program, relation, criteria = {} } = params
+        let {user, program, relation, criteria = {}, ip } = params
 
         if(!isValidTable( relation ) ) return error(`Invalid table name: ${ relation }`)
         let command = `osqueryi --json "select * from ${relation}"`;
