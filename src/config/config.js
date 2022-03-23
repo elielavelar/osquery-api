@@ -14,5 +14,6 @@ export default {
     linuxOS: 'linux',
     macOS: 'darwin',
     centralServerURL: process.env.SERVER_URL || 'http://localhost:3000',
-    token: process.env.TOKEN
+    token: process.env.TOKEN,
+    timeoutChecking: process.env.TIMEOUTCHECKING || 10000
 }

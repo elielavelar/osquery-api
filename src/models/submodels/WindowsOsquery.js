@@ -10,7 +10,7 @@ export const findRegistry = async ({ select = '*',  key , params = {}}) => {
     } catch ( e) {
         error( e )
     }
-};
+}
 
 const getUSBDevices = async () => {
     const error = ( e) => { throw e }
