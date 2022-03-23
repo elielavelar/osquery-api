@@ -8,7 +8,6 @@ export const isValidTable = name => !!name.match(/^[_A-Za-z]+$/);
 export const getIpAddress = req =>  req.ip.split(':').at(-1)
 
 export const getDifference = ( origObj, newObj) => {
-    
     const getChanges = ( newObj, origObj ) => {
         let arrayIndexCounter = 0
         return transform( newObj, ( result, value, key ) => {
