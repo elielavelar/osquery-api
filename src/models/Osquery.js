@@ -5,6 +5,7 @@ import * as Resource from './Resource'
 import * as WindowsOsquery from './submodels/WindowsOsquery'
 import * as LinuxOsquery from './submodels/LinuxOsquery'
 import util from 'util'
+import { isArray } from 'lodash'
 
 const execProm = util.promisify( exec )
 
@@ -49,7 +50,6 @@ export const getTables = async ( params = {} ) => {
             if( err ) error( err )
             callback( stdout )
         })
-
     } catch (e) {
          error( e )
     }
@@ -80,12 +80,12 @@ export const getOS = async ( params = {} ) => {
     }
 }
 
-export const getOSVersion = async ( params = {} ) => {
+export const getOSVersion = ( params = {} ) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         let relation = 'os_version'
         let command = `osqueryi --json "select * from ${relation}"`;
-        const result = await run({ command , error })
+        const result = run({ command , error })
         callback( result )
     } catch ( e) {
         error( e )
@@ -167,8 +167,9 @@ export const getApplications = async ( params = {}) => {
 
 const detectOS = async ( ) => {
     try {
-        const { values = {}} = await Resource.get( Resource.getPath('os'))
-        return values[0]
+        const result = await Resource.get( Resource.getPath('os'))
+        const { values = []} = result
+        return isArray(values) ? values[0] : values
     } catch (error) {
         throw error
     }

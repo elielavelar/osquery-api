@@ -2,11 +2,13 @@ import * as Resource from './Resource'
 import * as Changes from './Changes'
 import config from '../config/config'
 import * as OsQuery from './Osquery'
+import * as Validation from './Validation'
 import colors from 'colors'
 
 export const init = async () => {
     try {
         console.log('Starting DB Component...')
+
         setValue({ token: config.token})
         /*setData({
             callfunction: OsQuery.getDataQuery,
@@ -71,7 +73,7 @@ export const init = async () => {
             relation: 'sub_devices' 
         })
         */
-       checkingChanges()
+       await checkingChanges()
     }  catch (error) {
         throw error
     }
@@ -99,9 +101,10 @@ const setData = async ({callfunction, callback, type, path, ...params}) => {
 }
 
 const checkingChanges = async () => {
-    const defaultValues = Resource.get();
+    const defaultValues = await Resource.get();
+    
     setInterval( async () => {
-        
+        Validation.run({ defaultValues });
     }, config.timeoutChecking )
 }
 
