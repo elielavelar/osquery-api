@@ -1,6 +1,8 @@
 import * as Resource from './Resource'
+import * as Changes from './Changes'
 import config from '../config/config'
 import * as OsQuery from './Osquery'
+import colors from 'colors'
 
 export const init = async () => {
     try {
@@ -69,6 +71,7 @@ export const init = async () => {
             relation: 'sub_devices' 
         })
         */
+       checkingChanges()
     }  catch (error) {
         throw error
     }
@@ -94,3 +97,11 @@ const setData = async ({callfunction, callback, type, path, ...params}) => {
         throw error
     }
 }
+
+const checkingChanges = async () => {
+    const defaultValues = Resource.get();
+    setInterval( async () => {
+        
+    }, config.timeoutChecking )
+}
+
