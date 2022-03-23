@@ -1,4 +1,4 @@
-import * as OsQuery from './OsQuery'
+import * as OsQuery from './Osquery'
 import * as Changes from './Changes'
 
 export const run = ({ defaultValues }) => {
