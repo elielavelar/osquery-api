@@ -35,5 +35,9 @@ export const getPath = async ({ ...params }) => {
     }
 }
 
+export const applyFilter = ({ defValues = {}, filterName }) => {
+    
+}
+
 
 export { getDifference as validateDataChanges, merge, inspect }

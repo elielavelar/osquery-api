@@ -80,6 +80,18 @@ export const getOS = async ( params = {} ) => {
     }
 }
 
+export const getUptime = async ( params = {} ) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'uptime'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
+    } catch ( e) {
+        error( e )
+    }
+}
+
 export const getOSVersion = ( params = {} ) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
@@ -133,7 +145,7 @@ export const getDevices = async ( params = {}) => {
         let result = {};
         switch ( os.build_platform ) {
             case config.windowsOS:
-                result = await WindowsOsquery.getDevices({ callback });
+                result = await WindowsOsquery.getDeviceEvents({ callback });
                 break;
             case config.linuxOS:
                 result = await LinuxOsquery.getDevices({ callback });
@@ -160,6 +172,27 @@ export const getApplications = async ( params = {}) => {
             default:
                 break;
         }
+    } catch ( e) {
+        error( e )
+    }
+}
+
+export const getDeviceEvents = async ( params = {}) => {
+    const {callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        const os = await detectOS();
+        let result = {};
+        switch ( os.build_platform ) {
+            case config.windowsOS:
+                result = await WindowsOsquery.getDeviceEvents({ callback });
+                break;
+            case config.linuxOS:
+                result = await LinuxOsquery.getDeviceEvents({ callback });
+                break;
+            default:
+                break;
+        }
+        return result;
     } catch ( e) {
         error( e )
     }

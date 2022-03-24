@@ -53,7 +53,21 @@ export const getDevices = async( params = {}) => {
     try {
         //const values = await getUSBDevices()
         WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback, where: `Description like 'USB%'`})
+        //WindowsWMI.getInfo({ className: 'Win32_USBHub', callback })
         
+    } catch ( e ) {
+        error( e )
+    }
+}
+
+export const getDeviceEvents = async( params = {}) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'osquery_packs'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
+        //WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback })
     } catch ( e ) {
         error( e )
     }

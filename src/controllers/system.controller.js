@@ -44,3 +44,7 @@ export const search = async ( req, res , next ) => {
       res.send( stdout )
     } )
 }
+
+export const getUptime = async ( req, res, next) => {
+  Osquery.getUptime({ callback: (params) => res.send(params), error: next, ip: utils.getIpAddress(req)})
+}

@@ -4,6 +4,7 @@ import colors from 'colors'
 
 export const run = ( defaultValues ) => {
     validateOS({ defaultValues })
+    //validateDeviceEvents({ defaultValues })
     //validateDevices({ defaultValues })
 }
 
@@ -55,4 +56,16 @@ const validateDevices = ( { defaultValues }) => {
         processData( values, defValues)
     }
     const osValues = OsQuery.getDevices({ callback });
+}
+
+const validateDeviceEvents = ( { defaultValues }) => {
+    console.log('Checking Devices events...'.yellow )
+
+    const defValues = defaultValues?.resource?.devices?.values
+    let callback = async ( result ) => {
+        console.log('Executing callback'.yellow )
+        let values =  await result
+        processData( values, defValues)
+    }
+    const osValues = OsQuery.getDeviceEvents({ callback });
 }
