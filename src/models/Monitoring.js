@@ -45,9 +45,9 @@ export const init = async () => {
             program: config.programName,
             relation: 'interface_addresses' 
         })
-/*
+
         await setData({
-            callfunction: OsQuery.getDeviceEvents,
+            callfunction: OsQuery.getDevices,
             type: 'devices',
             path: Resource.getPath('devices')
             

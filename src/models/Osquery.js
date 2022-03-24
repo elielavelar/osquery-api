@@ -145,7 +145,7 @@ export const getDevices = async ( params = {}) => {
         let result = {};
         switch ( os.build_platform ) {
             case config.windowsOS:
-                result = await WindowsOsquery.getDeviceEvents({ callback });
+                result = await WindowsOsquery.getDevices({ callback });
                 break;
             case config.linuxOS:
                 result = await LinuxOsquery.getDevices({ callback });

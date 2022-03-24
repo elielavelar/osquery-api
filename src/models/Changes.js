@@ -1,7 +1,7 @@
 import db from '../config/db'
 import { v4 as uuidv4 } from 'uuid'
 import * as ActiveRecord from './ActiveRecord'
-import { getDifference, merge, inspect } from '../libraries/utils.library' 
+import { getDifference, merge, inspect, getIntersect , getIndexByKey } from '../libraries/utils.library' 
 
 const keyword = 'changes';
 //export const { save, get, getPath } = ActiveRecord
@@ -36,8 +36,8 @@ export const getPath = async ({ ...params }) => {
 }
 
 export const applyFilter = ({ defValues = {}, filterName }) => {
-    
+
 }
 
 
-export { getDifference as validateDataChanges, merge, inspect }
+export { getDifference as validateDataChanges, getIntersect, merge, inspect, getIndexByKey }

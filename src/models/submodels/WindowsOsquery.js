@@ -52,6 +52,7 @@ export const getDevices = async( params = {}) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         //const values = await getUSBDevices()
+        
         WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback, where: `Description like 'USB%'`})
         //WindowsWMI.getInfo({ className: 'Win32_USBHub', callback })
         
