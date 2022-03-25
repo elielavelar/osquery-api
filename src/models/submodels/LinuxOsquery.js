@@ -1,4 +1,5 @@
 import { run , runPower} from '../Osquery'
+import { processData } from '../Validation'
 export const getApplications = async ( params = {}) => {
 
 }
@@ -25,4 +26,13 @@ export const getDeviceEvents = async( params = {}) => {
     } catch ( e ) {
         error( e )
     }
+}
+
+export const getCallbackDevices = ( defValues, queryFunction ) => {
+    let callback = async ( result ) => {
+        console.log('Executing callback'.yellow )
+        let values =  await result
+        processData( values, defValues)
+    }
+    queryFunction( { callback })
 }

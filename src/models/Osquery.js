@@ -198,11 +198,32 @@ export const getDeviceEvents = async ( params = {}) => {
     }
 }
 
-const detectOS = async ( ) => {
+export const detectOS = async ( ) => {
     try {
         const result = await Resource.get( Resource.getPath('os'))
         const { values = []} = result
         return isArray(values) ? values[0] : values
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getCallbackDevices = ( defValues, queryFunction ) => {
+    try {
+        
+        const get =  async () => {
+            const os = await detectOS()
+            switch ( os.build_platform ) {
+                case config.windowsOS:
+                    return WindowsOsquery.getCallbackDevices( defValues, queryFunction );
+                case config.linuxOS:
+                case config.macOS:
+                default:
+                    return LinuxOsquery.getCallbackDevices( defValues, queryFunction );
+            }
+            
+        }
+        return get()
     } catch (error) {
         throw error
     }
