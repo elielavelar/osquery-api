@@ -51,8 +51,7 @@ const validateDevices = ( { defaultValues }) => {
     console.log('Checking Devices changes...'.yellow )
 
     const defValues = defaultValues?.resource?.devices?.values
-    const callback = OsQuery.getCallbackDevices( defValues )
-    const osValues = OsQuery.getDevices({ callback });
+    const values = OsQuery.getCallbackDevices( defValues , OsQuery.getDevices)
 }
 
 const validateDeviceEvents = ( { defaultValues }) => {

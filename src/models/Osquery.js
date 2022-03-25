@@ -208,18 +208,18 @@ export const detectOS = async ( ) => {
     }
 }
 
-export const getCallbackDevices = ( defValues ) => {
+export const getCallbackDevices = ( defValues, queryFunction ) => {
     try {
         
         const get =  async () => {
             const os = await detectOS()
-            console.log( os )
             switch ( os.build_platform ) {
                 case config.windowsOS:
-                    return WindowsOsquery.getCallbackDevices( defValues );
+                    return WindowsOsquery.getCallbackDevices( defValues, queryFunction );
                 case config.linuxOS:
+                case config.macOS:
                 default:
-                    return LinuxOsquery.getCallbackDevices( defValues );
+                    return LinuxOsquery.getCallbackDevices( defValues, queryFunction );
             }
             
         }

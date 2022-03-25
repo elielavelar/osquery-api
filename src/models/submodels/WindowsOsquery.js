@@ -1,4 +1,5 @@
 import { run , runPower} from '../Osquery'
+import * as Changes from '../Changes'
 import * as WindowsWMI from './WindowsWMI'
 import { isArray, isEmpty, isObject } from 'lodash'
 
@@ -87,7 +88,7 @@ export const getApplications = async ( params = {})  => {
     }
 }
 
-export const getCallbackDevices = ( defValues ) => {
+export const getCallbackDevices = ( defValues, queryFunction ) => {
     const callback = async ( result ) => {
         let values =  await result
         let defValuesFiltered = []
@@ -131,5 +132,5 @@ export const getCallbackDevices = ( defValues ) => {
             console.log('No changes found...'.green )
         }
     }
-    return callback
+    queryFunction( { callback })
 }

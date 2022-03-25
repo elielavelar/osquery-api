@@ -28,4 +28,11 @@ export const getDeviceEvents = async( params = {}) => {
     }
 }
 
-export { processData as getCallbackDevices }
+export const getCallbackDevices = ( defValues, queryFunction ) => {
+    let callback = async ( result ) => {
+        console.log('Executing callback'.yellow )
+        let values =  await result
+        processData( values, defValues)
+    }
+    queryFunction( { callback })
+}
