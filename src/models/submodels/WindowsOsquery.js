@@ -55,7 +55,7 @@ export const getDevices = async( params = {}) => {
     try {
         //const values = await getUSBDevices()
         
-        WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback, where: `Description like 'USB%'`})
+        await WindowsWMI.getInfo({ className: 'Win32_PnPEntity', callback, where: `Description like 'USB%'`})
         //WindowsWMI.getInfo({ className: 'Win32_USBHub', callback })
         
     } catch ( e ) {
@@ -121,16 +121,16 @@ export const getCallbackDevices = ( defValues, queryFunction ) => {
             isEmpty(nValue) ? newValues.push( detValues ) : null
         })
 
+        console.group()
         if(newValues.length !== 0 || missingValues.length !== 0 ){
-            console.group()
             console.assert( newValues?.length === 0 , newValues.length+' new values found...'.red)
             console.assert( missingValues?.length === 0 , missingValues.length+' missing values found...'.red)
             newValues?.length > 0 ? console.log( 'New Values', `${ Changes.inspect( newValues ) }`) : null
             missingValues?.length > 0 ? console.log( 'Missing Values', `${ Changes.inspect( missingValues ) }`) : null
-            console.groupEnd()
         } else {
             console.log('No changes found...'.green )
         }
+        console.groupEnd()
     }
     queryFunction( { callback })
 }

@@ -221,7 +221,6 @@ export const getCallbackDevices = ( defValues, queryFunction ) => {
                 default:
                     return LinuxOsquery.getCallbackDevices( defValues, queryFunction );
             }
-            
         }
         return get()
     } catch (error) {

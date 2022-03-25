@@ -4,7 +4,7 @@ import colors from 'colors'
 import config from '../config/config'
 
 export const run = ( defaultValues ) => {
-    //validateOSVersion({ defaultValues })
+    validateOSVersion({ defaultValues })
     //validateDeviceEvents({ defaultValues })
     validateDevices({ defaultValues })
 }
@@ -12,16 +12,16 @@ export const run = ( defaultValues ) => {
 export const processData = ( values, defValues ) => {
     const newValues = Changes.validateDataChanges( defValues, values )//
     const missingValues = Changes.validateDataChanges( values, defValues )//
+    console.group()
     if(newValues.length !== 0 || missingValues.length !== 0 ){
-        console.group()
         console.assert( newValues?.length === 0 , newValues.length+' new values found...'.red)
         console.assert( missingValues?.length === 0 , missingValues.length+' missing values found...'.red)
         newValues?.length > 0 ? console.log( 'New Values', Changes.inspect( newValues )) : null
         missingValues?.length > 0 ? console.log( 'Missing Values', Changes.inspect( missingValues )) : null
-        console.groupEnd()
     } else {
         console.log('No changes found...'.green )
     }
+    console.groupEnd()
     return values;
 }
 
