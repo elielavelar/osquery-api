@@ -1,4 +1,5 @@
 import { run , runPower} from '../Osquery'
+import { processData } from '../Validation'
 export const getApplications = async ( params = {}) => {
 
 }
@@ -26,3 +27,5 @@ export const getDeviceEvents = async( params = {}) => {
         error( e )
     }
 }
+
+export { processData as getCallbackDevices }
