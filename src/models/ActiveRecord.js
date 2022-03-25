@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const _rootpath = '/'
 let keyword = null
-let _path = `${_rootpath+keyword}`
+let _path = `${_rootpath}`
 
 export const setKeyword = _keyword => { 
     keyword = _keyword
@@ -20,7 +20,7 @@ export const getPath = ( node = '') => {
 
 export const save = async ({ type = keyword, path = _path, ...values }) => {
     const { overewrite = false } = values
-    let _parentPath = getParent(path)
+    //let _parentPath = getParent(path)
     const model = get(path)
     if(typeof model !== 'undefined' ){
         overewrite ? update({ path, ...values} ) : null;

@@ -5,6 +5,7 @@ import * as Resource from './Resource'
 import * as WindowsOsquery from './submodels/WindowsOsquery'
 import * as LinuxOsquery from './submodels/LinuxOsquery'
 import util from 'util'
+import { isArray } from 'lodash'
 
 const execProm = util.promisify( exec )
 
@@ -49,7 +50,6 @@ export const getTables = async ( params = {} ) => {
             if( err ) error( err )
             callback( stdout )
         })
-
     } catch (e) {
          error( e )
     }
@@ -80,12 +80,24 @@ export const getOS = async ( params = {} ) => {
     }
 }
 
-export const getOSVersion = async ( params = {} ) => {
+export const getUptime = async ( params = {} ) => {
+    const { callback = (x) => x , error = (err) => {throw err}}  = params
+    try {
+        let relation = 'uptime'
+        let command = `osqueryi --json "select * from ${relation}"`;
+        const result = await run({ command , error })
+        callback( result )
+    } catch ( e) {
+        error( e )
+    }
+}
+
+export const getOSVersion = ( params = {} ) => {
     const { callback = (x) => x , error = (err) => {throw err}}  = params
     try {
         let relation = 'os_version'
         let command = `osqueryi --json "select * from ${relation}"`;
-        const result = await run({ command , error })
+        const result = run({ command , error })
         callback( result )
     } catch ( e) {
         error( e )
@@ -165,10 +177,53 @@ export const getApplications = async ( params = {}) => {
     }
 }
 
-const detectOS = async ( ) => {
+export const getDeviceEvents = async ( params = {}) => {
+    const {callback = (x) => x , error = (err) => {throw err}}  = params
     try {
-        const { values = {}} = await Resource.get( Resource.getPath('os'))
-        return values[0]
+        const os = await detectOS();
+        let result = {};
+        switch ( os.build_platform ) {
+            case config.windowsOS:
+                result = await WindowsOsquery.getDeviceEvents({ callback });
+                break;
+            case config.linuxOS:
+                result = await LinuxOsquery.getDeviceEvents({ callback });
+                break;
+            default:
+                break;
+        }
+        return result;
+    } catch ( e) {
+        error( e )
+    }
+}
+
+export const detectOS = async ( ) => {
+    try {
+        const result = await Resource.get( Resource.getPath('os'))
+        const { values = []} = result
+        return isArray(values) ? values[0] : values
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getCallbackDevices = ( defValues, queryFunction ) => {
+    try {
+        
+        const get =  async () => {
+            const os = await detectOS()
+            switch ( os.build_platform ) {
+                case config.windowsOS:
+                    return WindowsOsquery.getCallbackDevices( defValues, queryFunction );
+                case config.linuxOS:
+                case config.macOS:
+                default:
+                    return LinuxOsquery.getCallbackDevices( defValues, queryFunction );
+            }
+            
+        }
+        return get()
     } catch (error) {
         throw error
     }
